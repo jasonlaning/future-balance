@@ -1,0 +1,125 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+a {
+	text-decoration: none;
+}
+
+.temp-image {
+	width: 100%;
+}
+
+#nav-bar-wrap {
+	position: fixed;
+	height: 60px;
+	width: 100%;
+	border-bottom: 1px solid gray;
+	padding: 0 10px;
+	background-color: white;
+	z-index: 1;
+}
+
+#nav-bar {
+	position: relative;
+	margin: 0 auto;
+	max-width: 1000px;
+}
+
+.site-title {
+	font-size: 22px;
+	font-weight: bold;
+	line-height: 60px;
+}
+
+a:visited .site-title {
+	color: black;
+}
+
+.nav-button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 44px;
+	padding: 0 15px;
+	margin: 8px 0;
+	line-height: 44px;
+	color: white;
+	background-color: green;
+	text-align: center;
+	border-radius: 5px;
+}
+
+#content-wrap {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+main {
+  padding-top: 100px;
+}
+
+.front-page {
+	padding-top: 60px;
+}
+
+.report-row {
+	margin-bottom: 20px;
+}
+
+.date-box {
+	height: 150px;
+	position: relative;
+	line-height: 150px;
+	text-align: center;
+	border: 1px solid gray;
+}
+
+.dashboard-box {
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+}
+
+.bolded {
+	font-weight: bold;
+}
+
+.outlined {
+	border: 1px solid gray;
+}
+
+.balance {
+	font-weight: bold;
+}
+
+.balance-increased {
+	border: 2px solid green;
+}
+
+.balance-decreased {
+	border: 2px solid red;
+}
+
+.day-of-week, .date-num, .date-month {
+	line-height: normal;
+	position: absolute;
+	padding: 5px;
+}
+
+.date-num {
+	right: 0;
+}
+
+.day-of-week {
+	bottom: 0;
+	right: 0;
+}
+
+@media only screen and (max-width: 640px) {
+
+	main .row {
+		margin-bottom: 0;
+	}
+
+}
