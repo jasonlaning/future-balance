@@ -11,20 +11,12 @@ function getAdjustments(callbackFn) {
 	setTimeout(function(){ callbackFn(MOCK_ADJUSTMENTS)}, 100);
 }
 
-
 function calculateAdjustments(adjustmentsData) {
-
-	console.log('calculating forecast');
 
 	var adjustments = MOCK_ADJUSTMENTS.adjustmentEntries;
 	var dateCounter = moment(MOCK_ADJUSTMENTS.mostRecentBalance.date);
 	var toDate = moment().add(1, 'years');
 	var today = moment();
-
-
-	console.log('dateCounter =' + dateCounter.format());
-	console.log('toDate =' + toDate.format());
-	console.log('today =' + today.format());
 
 	for (dateCounter; dateCounter.isBefore(moment(toDate).add(1, 'days')); dateCounter.add(1, 'days')) {
 		adjustments.forEach(function(adj) {
@@ -32,7 +24,7 @@ function calculateAdjustments(adjustmentsData) {
 			console.log(adjStart.format('D'));
 			var adjEnd = moment(adj.endDate);
 			if (dateCounter.isAfter(moment(adjStart.clone()).subtract(1, 'days')) && dateCounter.isBefore(moment(adjEnd).add(1, 'days'))) {
-				if ((adj.periodType === 'month(s)') && (adjStart.format('D') === dateCounter.format('D')) && ((dateCounter.diff(adj.Start, 'month(s)')) % adj.periodUnit === 0)) {
+				if ((adj.periodType === 'month(s)') && (adjStart.format('D') === dateCounter.format('D')) && ((dateCounter.diff(adj.Start, 'months')) % adj.periodUnit === 0)) {
 					if (state.adjustments[dateCounter]) {
 						state.adjustments[dateCounter].push(adj);
 					}
@@ -40,7 +32,7 @@ function calculateAdjustments(adjustmentsData) {
 						state.adjustments[dateCounter] = [adj];
 					}
 				}
-				if ((adj.periodType === 'week(s)') && (adjStart.format('ddd') === dateCounter.format('ddd')) && ((dateCounter.diff(adj.Start, 'week(s)')) % adj.periodUnit === 0)) {
+				if ((adj.periodType === 'week(s)') && (adjStart.format('ddd') === dateCounter.format('ddd')) && ((dateCounter.diff(adj.Start, 'weeks')) % adj.periodUnit === 0)) {
 					if (state.adjustments[dateCounter]) {
 						state.adjustments[dateCounter].push(adj);
 					}
@@ -53,8 +45,6 @@ function calculateAdjustments(adjustmentsData) {
 		});
 
 	}
-
-
 
 	calculateForecast(state.adjustments);
 }
@@ -102,8 +92,6 @@ function renderForecast(forecastData) {
 	console.log(forecastData);
 	console.log(forecastData[dateCounter]);
 
-
-
 	// display a row (week) at a time:
 	var forecastHTML = '<div class="row report-row">';
 	var daysRendered = 1;
@@ -132,7 +120,6 @@ function renderForecast(forecastData) {
 	$('main').html(forecastHTML);
 
 }
-
 
 function getAdjustmentsAndCalculateAdjustments() {
 	getAdjustments(calculateAdjustments);
