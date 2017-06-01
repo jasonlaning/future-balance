@@ -59,8 +59,21 @@ main {
   padding-top: 100px;
 }
 
+#js-container {
+	margin-top: 20px;
+}
+
 .front-page {
 	padding-top: 60px;
+}
+
+.row-heading {
+	background-color: #efefef;
+}
+
+.row-item {
+	height: 100px;
+	border-bottom: 1px solid #efefef;
 }
 
 .report-row {
@@ -75,10 +88,55 @@ main {
 	border: 1px solid gray;
 }
 
-.dashboard-box {
+.dashboard-header-box {
 	height: 50px;
 	line-height: 50px;
 	text-align: center;
+}
+
+.dashboard-entry-box {
+	text-align: center;
+	padding-top: 20px;
+	position: relative;
+	height: 100px;
+}
+
+.previous-balance {
+	text-align: left;
+}
+
+.js-previous-balance {
+	font-weight: bold;
+}
+
+.add-adjustment-button {
+	border: 1px solid gray;
+	height: 50px;
+	line-height: 50px;
+	border-radius: 5px;
+	background-color: #efefef;
+}
+
+.edit-button {
+	position: absolute;
+	bottom: 10px;
+	padding: 5px;
+	font-size: 12px;
+	background-color: #efefef;
+	border: 1px solid gray;
+	border-radius: 5px;
+}
+
+.delete-button {
+	position: absolute;
+	bottom: 10px;
+	right: 0;
+	padding: 5px;
+	color: white;
+	font-size: 12px;
+	background-color: red;
+	border: 1px solid pink;
+	border-radius: 5px;
 }
 
 .bolded {

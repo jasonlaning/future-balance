@@ -1,25 +1,26 @@
 'use strict';
 
 function renderDashboard(adjustmentData) {
-	var dashboardHTML = '<div class="row"><div class="col-2 outlined"><div class="dashboard-box bolded">Type</div></div>' +
-						'<div class="col-4 outlined"><div class="dashboard-box bolded">Name</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box bolded">Amount</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box bolded">Repeat Period</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box bolded">Start Date</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box bolded">End Date</div></div>' +
+	var dashboardHTML = '<div class="row row-heading"><div class="col-2"><div class="dashboard-header-box bolded">Type</div></div>' +
+						'<div class="col-4"><div class="dashboard-header-box bolded">Name</div></div>' +
+						'<div class="col-2"><div class="dashboard-header-box bolded">Amount</div></div>' +
+						'<div class="col-2"><div class="dashboard-header-box bolded">Period</div></div>' +
+						'<div class="col-2"><div class="dashboard-header-box bolded">Start Date</div></div>' +
+						'<div class="col-2"><div class="dashboard-header-box bolded">End Date</div></div>' +
 						'</div>';
 
 	adjustmentData.adjustmentEntries.forEach(function(entry) {
-		dashboardHTML += '<div class="row"><div class="col-2 outlined"><div class="dashboard-box">' + entry.type + '</div></div>' +
-						'<div class="col-4 outlined"><div class="dashboard-box">' + entry.name + '</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box">' + entry.amount + '</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box">' + entry.periodUnit + ' ' + entry.periodType + '</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box">' + moment(entry.startDate).format('L') + '</div></div>' +
-						'<div class="col-2 outlined"><div class="dashboard-box">' + moment(entry.endDate).format('L') + '</div></div>' +
+		dashboardHTML += '<div class="row row-item"><div class="col-2"><div class="dashboard-entry-box">' + 
+						'<div class="edit-button">Edit</div><div class="delete-button">Remove</div>' + entry.type + '</div></div>' +
+						'<div class="col-4"><div class="dashboard-entry-box">' + entry.name + '</div></div>' +
+						'<div class="col-2"><div class="dashboard-entry-box">' + entry.amount + '</div></div>' +
+						'<div class="col-2"><div class="dashboard-entry-box">' + entry.periodUnit + ' ' + entry.periodType + '</div></div>' +
+						'<div class="col-2"><div class="dashboard-entry-box">' + moment(entry.startDate).format('L') + '</div></div>' +
+						'<div class="col-2"><div class="dashboard-entry-box">' + moment(entry.endDate).format('L') + '</div></div>' +
 						'</div>';
 	})
 
-	$('main').html(dashboardHTML);
+	$('#js-container').html(dashboardHTML);
 
 }
 
