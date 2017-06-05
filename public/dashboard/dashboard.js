@@ -1,5 +1,30 @@
 'use strict';
 
+function getAdjustments(callbackFn) {
+
+	//setTimeout(function(){ callbackFn(MOCK_ADJUSTMENTS)}, 100);
+	var settings = {
+	  url: "../users/",
+	  method: "GET",
+	  headers: {
+	    'content-type': "application/json"
+	  }/*,
+	  xhrFields: {
+      	withCredentials: true
+   	  }*/
+	};
+
+	$.ajax(settings).done(function(response) {
+		console.log("response is: ", response.user);
+		if (response.user) {
+			callbackFn(response.user);
+		}
+		else {
+			window.location = response.redirect;
+		}
+	});
+}
+
 function renderDashboard(adjustmentData) {
 	var dashboardHTML = '<div class="row row-heading"><div class="col-2"><div class="dashboard-header-box bolded">Type</div></div>' +
 						'<div class="col-4"><div class="dashboard-header-box bolded">Name</div></div>' +
@@ -24,4 +49,4 @@ function renderDashboard(adjustmentData) {
 
 }
 
-renderDashboard(MOCK_ADJUSTMENTS);
+$(getAdjustments(renderDashboard));
