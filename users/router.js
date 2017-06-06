@@ -28,7 +28,8 @@ const basicStrategy = new BasicStrategy((username, password, callback) => {
 			else {
 				return callback(null, user);
 			}
-		});
+		})
+		.catch(err => console.log('Invalid username or password'))
 });
 
 router.use(require('express-session')({ 
@@ -39,7 +40,6 @@ router.use(require('express-session')({
 
 passport.use(basicStrategy);
 router.use(passport.initialize());
-
 router.use(passport.session());
 
 passport.serializeUser(function(user, done) {
@@ -56,30 +56,33 @@ function loggedIn(req, res, next) {
 	if (req.user) {
 		next();
 	} else {
-		res.send({redirect: '/login.html'});
+		res.json({redirect: '/login.html', message: 'Please sign in'});
 	}
 }
 
+// GET for user to sign in
 router.get('/login',
-  passport.authenticate('basic', {session: true}),
-  (req, res) => {
+	passport.authenticate('basic', {session: true, failureRedirect: '/login.html'}),
+		(req, res) => {
+			res.json({user: req.user.apiRepr(), message: 'Sign in successful'});
+		}
+);
+
+// GET (protected, must be signed-in already and have session cookie)
+router.get('/me', loggedIn, function(req, res, next) {
   	res.json({user: req.user.apiRepr()});
 	}
 );
 
-router.post('/login',
-  passport.authenticate('basic', {session: true}),
-  (req, res) => {
-  	res.json({user: req.user.apiRepr()});
-	}
-);
+// GET for user to sign out
+router.get('/logout', function(req, res){
+	req.session.destroy(function (err) {
+  		res.redirect('/');
+  	});
+});
 
-router.get('/', loggedIn, function(req, res, next) {
-  	res.json({user: req.user.apiRepr()});
-	}
-);
-
-router.post('/test', (req, res) => {
+// POST for creating new user account
+router.post('/signup', (req, res) => {
 	if (!req.body) {
 		return res.status(400).json({message: 'No request body'});
 	}
@@ -113,14 +116,13 @@ router.post('/test', (req, res) => {
 		return res.status(422).json({message: 'Incorrect field length: password'});
 	}
 
-	// check for existing user
 	return User
 		.find({username})
 		.count()
 		.exec()
 		.then(count => {
 			if (count > 0) {
-				return res.status(422).json({message: 'username already taken'});
+				return res.status(422).json({message: 'Username already taken'});
 			}
 			return User.hashPassword(password);
 		})
@@ -136,11 +138,34 @@ router.post('/test', (req, res) => {
 				});
 		})
 		.then(user => {
-			return res.status(201).json(user.apiRepr());
+			return res.status(201).json({user: user.apiRepr(), message: 'New account created! Please sign in'});
 		})
 		.catch(err => {
 			res.status(500).json({message: 'Internal server error'});
 		});
 });
+
+// POST (password protected, must have session cookie) for adding a new adjustment entry
+
+// PUT (password protected, must have session cookie) for editing user data 
+// includes: account info, most recent balance, or adjustment entries
+
+// DELETE user account (password protected, must have session cookie)
+router.delete('/me', loggedIn, (req, res) => {
+	User
+		.findByIdAndRemove(req.params.id)
+		.exec()
+		.then(user => res.status(204).end())
+		.catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
+// DELETE adjustment entry (password protected)
+router.delete('/me/adjustmentEntry', loggedIn, (req, res) => {
+	User.adjustmentEntries
+		.findByIdAndRemove(req.params.id)
+		.exec()
+		.then(user => res.status(204).end())
+		.catch(err => res.status(500).json({message: 'Internal server error'}));
+})
 
 module.exports = {router};
