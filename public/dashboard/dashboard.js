@@ -4,7 +4,7 @@ function getAdjustments(callbackFn) {
 
 	//setTimeout(function(){ callbackFn(MOCK_ADJUSTMENTS)}, 100);
 	var settings = {
-	  url: "../users/",
+	  url: "../users/me",
 	  method: "GET",
 	  headers: {
 	    'content-type': "application/json"
