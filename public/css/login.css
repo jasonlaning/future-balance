@@ -32,7 +32,7 @@ header {
 
 .log-in-form {
   background-color: white;
-  padding: 40px;
+  padding: 40px 40px 20px 40px;
 }
 
 .log-in-form h1 {
@@ -79,6 +79,15 @@ header {
 
 .forgot-password:link {
   color: #a9a9a9;
+}
+
+.message-box {
+  height: 20px;
+}
+
+.js-error-message {
+  color: red;
+  line-height: 20px;
 }
 
 .log-in, .log-in a:link {

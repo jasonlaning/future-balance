@@ -17,8 +17,10 @@ function signInUser(username, password) {
 			if (response.user) {
 				location.href = '/dashboard/';
 			}
-
-			console.log('response: ', response);
+			else {
+				$('.log-in-form')[0].reset();
+				$('.js-error-message').html('Invalid username or password');
+			}
 	});
 }
 
@@ -30,6 +32,7 @@ function watchSubmit() {
 		var username = $('#username').val();
 		var password = $('#password').val();
 		signInUser(username, password);
+
 	})
 }
 
