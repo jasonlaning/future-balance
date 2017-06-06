@@ -3,7 +3,7 @@
 function checkIfLoggedIn() {
 
 	var settings = {
-	  url: "../users/",
+	  url: "../users/me",
 	  method: "GET",
 	  headers: {
 	    'content-type': "application/json"
