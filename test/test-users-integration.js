@@ -12,18 +12,6 @@ const {TEST_DATABASE_URL} = require('../config');
 
 chai.use(chaiHttp);
 
-
-/*function seedUserData() {	
-	let username = 'testuser';
-	let password = 'password';
-	let hashedPassword = bcrypt.hash(password, 10);
-	hashedPassword
-		.then(_hashedPassword => {
-			let seedData = {username: username, password: _hashedPassword};
-			return User.create(seedData);
-		})
-}*/
-
 function seedUserData() {
 	const username = 'testuser';
 	const password = 'password';
@@ -33,14 +21,14 @@ function seedUserData() {
 		seedData.push(generateUserData());
 	}
 
-	// set one record to known username and password for logging in
+	// set one record with known username and password for testing log in
 	seedData[5].username = username;
 	seedData[5].password = password;
 	const hashedPassword = bcrypt.hash(password, 10);
-
 	return hashedPassword
 		.then(_hashedPassword => {
 			seedData[5].password = _hashedPassword;
+			console.warn('\n Seeding database');
 			return User.create(seedData);
 		})
 }
@@ -90,7 +78,7 @@ function generateUserData() {
 }
 
 function tearDownDb() {
-	console.warn('Deleting database');
+	console.warn('Deleting database\n');
 	return mongoose.connection.dropDatabase();
 }
 
@@ -126,7 +114,6 @@ describe('Users API resource', function() {
 					res.body.user.username.should.equal('testuser');
 					res.body.user.should.include.keys(
 						'username', 'firstName', 'lastName', 'mostRecentBalance', 'adjustmentEntries');
-					res.should.have.cookie;
 				})
 		});
 	});
@@ -136,7 +123,7 @@ describe('Users API resource', function() {
 		it('should return user that is signed in', function() {
 			let agent = chai.request.agent(app);
 			return agent
-				.get('/users/login')
+				.get('/users/login') // first have to log in
 				.auth('testuser', 'password')
 				.then(() => {				
 					return agent.get('/users/me')
@@ -150,10 +137,255 @@ describe('Users API resource', function() {
 		});
 	});
 
-	// POST for creating new user account
+	describe('GET endpoint to sign out', function() {
 
+		it('should sign out the user and redirect', function() {
+			let agent = chai.request.agent(app);
+			return agent
+				.get('/users/login') // first have to log in
+				.auth('testuser', 'password')
+				.then(() => {				
+					return agent.get('/users/logout')
+						.then(res => {
+							res.should.have.status(200);
+							res.redirects.should.have.lengthOf(1);							
+						})					
+				});
+		});
+	});
 
+	describe('POST endpoint to create new user', function() {
+
+		it('should create a new user', function() {
+
+			let testUsername = 'testuser2010';
+			let testPassword = 'password123';
+			
+			return chai.request(app)
+				.post('/users/sign-up')
+				.send({username: testUsername, password: testPassword})
+				.then(res => {							
+					res.should.have.status(201);
+					res.body.user.username.should.equal(testUsername);
+					res.body.user.should.include.keys(
+					'username', 'firstName', 'lastName', 'mostRecentBalance', 'adjustmentEntries');			
+					User.findOne({username: testUsername})
+						.then(user => {
+							user.should.exist;
+							user.username.should.equal(testUsername);
+							user.password.should.equal(testPassword);
+						})
+				})
+		});
+	});
 	
+	describe('POST endpoint to add a new adjustment entry', function() {
+
+		it('should add a new adjustment entry', function() {
+			let agent = chai.request.agent(app);
+			let username = 'testuser';
+			let password = 'password';
+			let testEntry = {
+        					name: 'Giant Burrito',
+        					type: 'Expense',
+        					amount: 1000,
+        					periodUnit: 1,
+        					periodType: 'month(s)',
+        					startDate: '20170115',
+        					endDate: '20250101'
+        					};
+			return agent
+				.get('/users/login') // first have to log in
+				.auth(username, password)
+				.then(() => {				
+					return agent
+						.post('/users/me/adjustment-entry')
+						.send(testEntry)
+						.then(res => {
+							res.should.have.status(201);
+							let newId = res.body.id;
+							let resEntries = res.body.user.adjustmentEntries;
+							let resEntry;
+							resEntries.forEach((entry) => {
+								if (entry.id === newId) {
+									resEntry = entry; // finds updated entry in response
+								}
+							});
+							resEntry.name.should.equal(testEntry.name);
+							resEntry.type.should.equal(testEntry.type);
+							resEntry.amount.should.equal(testEntry.amount);
+							resEntry.periodUnit.should.equal(testEntry.periodUnit);
+							resEntry.periodType.should.equal(testEntry.periodType);
+							resEntry.startDate.should.equal(testEntry.startDate);
+							resEntry.endDate.should.equal(testEntry.endDate);						
+						})
+						.then(() => {
+							return User
+								.findOne({username: username}, {adjustmentEntries: {$elemMatch: { name: testEntry.name}}})
+								.then(user => {
+									let newEntry = user.adjustmentEntries[0];
+					
+									newEntry.name.should.equal(testEntry.name);
+									newEntry.type.should.equal(testEntry.type);
+									newEntry.amount.should.equal(testEntry.amount);
+									newEntry.periodUnit.should.equal(testEntry.periodUnit);
+									newEntry.periodType.should.equal(testEntry.periodType);
+									newEntry.startDate.should.equal(testEntry.startDate);
+									newEntry.endDate.should.equal(testEntry.endDate);
+								})
+						});					
+				});
+		});
+	});
+
+	describe('PUT endpoint to edit user data', function() {
+
+		let testChanges = {
+			firstName: 'Iceman',
+			mostRecentBalance: {
+				date: '20170501',
+				amount: 20000
+			}
+        }
+
+		it('should save changes to user data', function() {
+			let agent = chai.request.agent(app);
+			return agent
+				.get('/users/login') // first have to log in
+				.auth('testuser', 'password')
+				.then(() => {				
+					return agent
+						.put('/users/me')
+						.send(testChanges)
+						.then(res => {
+							res.should.have.status(200);
+							res.body.user.firstName.should.equal(testChanges.firstName);
+							res.body.user.mostRecentBalance.date.should.equal(testChanges.mostRecentBalance.date);
+							res.body.user.mostRecentBalance.amount.should.equal(testChanges.mostRecentBalance.amount);
+						})
+						.then(() => {
+							return User
+								.findOne({username: 'testuser'})
+								.then(user => {
+									user.firstName.should.equal(testChanges.firstName);
+									user.mostRecentBalance.date.should.equal(testChanges.mostRecentBalance.date);
+									user.mostRecentBalance.amount.should.equal(testChanges.mostRecentBalance.amount);
+								})
+						});					
+				});
+		});
+	});
+
+	describe('PUT endpoint to edit adjustment entry', function() {
+
+		it('should save changes to the adjustment entry', function() {
+			let agent = chai.request.agent(app);
+			let testEntry = {
+		        name: 'Rollercoaster',
+		        type: 'Expense',
+		        amount: 123456,
+		        periodUnit: 2,
+		        periodType: 'year(s)',
+		        startDate: '20170501',
+		        endDate: '20250101'
+        				}
+			return agent
+				.get('/users/login') // first have to log in
+				.auth('testuser', 'password')
+				.then((res) => {
+					testEntry.id = res.body.user.adjustmentEntries[0].id; // gets id of entry to change				
+					return agent
+						.put('/users/me/adjustment-entry')
+						.send(testEntry)
+						.then(res => {
+							let resEntry = res.body.user.adjustmentEntries[0]
+							res.should.have.status(200);
+							resEntry.name.should.equal(testEntry.name);
+							resEntry.type.should.equal(testEntry.type);
+							resEntry.amount.should.equal(testEntry.amount);
+							resEntry.periodUnit.should.equal(testEntry.periodUnit);
+							resEntry.periodType.should.equal(testEntry.periodType);
+							resEntry.startDate.should.equal(testEntry.startDate);
+							resEntry.endDate.should.equal(testEntry.endDate);
+							return User
+								.findOne({username: 'testuser'})
+								.then(user => {
+									let entry = user.adjustmentEntries[0];
+									entry.name.should.equal(testEntry.name);
+									entry.type.should.equal(testEntry.type);
+									entry.amount.should.equal(testEntry.amount);
+									entry.periodUnit.should.equal(testEntry.periodUnit);
+									entry.periodType.should.equal(testEntry.periodType);
+									entry.startDate.should.equal(testEntry.startDate);
+									entry.endDate.should.equal(testEntry.endDate);
+								})		
+						});			
+				});
+		});
+	});
+
+	describe('DELETE endpoint for user account', function() {
+
+		it('should delete the user account', function() {
+			let agent = chai.request.agent(app);
+			return agent
+				.get('/users/login') // first have to log in
+				.auth('testuser', 'password')
+				.then(() => {				
+					return agent
+						.delete('/users/me')
+						.then(res => {
+							res.should.have.status(200);
+							return User
+								.findOne({username: 'testuser'})
+								.then(res => {
+									should.not.exist(res);
+								})
+						})					
+				});
+		});
+	});
+
+	describe('DELETE endpoint for adjustment entry', function() {
+
+		it('should delete the adjustment entry', function() {
+			let agent = chai.request.agent(app);
+			return agent
+				.get('/users/login') // first have to log in
+				.auth('testuser', 'password')
+				.then((res) => {
+					let testEntry = res.body.user.adjustmentEntries[1];				
+					return agent
+						.delete('/users/me/adjustment-entry')
+						.send({id: testEntry.id})
+						.then(res => {
+							let resEntries = res.body.user.adjustmentEntries;
+							let deletedEntry = null;
+							resEntries.forEach((entry) => {
+								if (entry.id === testEntry.id) {
+									deletedEntry = entry;
+								}
+							});
+
+							res.should.have.status(200);
+							should.not.exist(deletedEntry);
+						})
+						.then (() => {
+							return User
+								.findOne({username: 'testuser'})
+								.then(user => {
+									let entries = user.adjustmentEntries;
+									let deletedEntry = null;
+									entries.forEach((entry) => {
+										if (entry.id === testEntry.id) {
+											deletedEntry = entry;
+										}
+									});
+									should.not.exist(deletedEntry);
+								});
+						});						
+				});
+		});
+	});	
 
 });
-
