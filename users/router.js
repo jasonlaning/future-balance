@@ -69,7 +69,7 @@ router.get('/login',
 		}
 );
 
-// GET (protected, must be signed-in already and have session cookie)
+// GET for user session (protected, must be signed-in already and have session cookie)
 router.get('/me', loggedIn, (req, res, next) => {
   	res.json({user: req.user.apiRepr()});
 	}
@@ -84,6 +84,7 @@ router.get('/logout', (req, res) => {
 
 // POST for creating new user account
 router.post('/sign-up', (req, res) => {
+
 	if (!req.body) {
 		return res.status(400).json({message: 'No request body'});
 	}
@@ -117,7 +118,7 @@ router.post('/sign-up', (req, res) => {
 		return res.status(422).json({message: 'Incorrect field length: password'});
 	}
 
-	return User
+	User
 		.find({username})
 		.count()
 		.exec()
@@ -193,9 +194,11 @@ router.post('/me/adjustment-entry', loggedIn, (req, res) => {
 		endDate: req.body.endDate
 	}
 
-	return User
-		.update({username: req.user.username}, {$push: {adjustmentEntries: newAdjustment}})
-		.then(user => res.status(204).json({user: req.user.apiRepr()}).end())
+	User
+		.findOneAndUpdate({username: req.user.username}, 
+			{$push: {adjustmentEntries: newAdjustment}},
+			{new: true})
+		.then(user => res.status(201).json({user: user.apiRepr(), id: newAdjustment.id}))
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
@@ -213,17 +216,28 @@ router.put('/me', loggedIn, (req, res) => {
 
 	User
 		.findByIdAndUpdate(req.user.id, {$set: updated}, {new: true})
-		.then(updatedUser => res.status(201).json(req.updatedUser.apiRepr()))
+		.then(user => res.status(200).json({user: user.apiRepr()}))
 		.catch(err => res.status(500).json({message: 'Error, update failed'}));
 });
 
 // PUT for editing adjustment entries, cookie required
+// changes should be an entire adjustment entry include the id
 router.put('/me/adjustment-entry', loggedIn, (req, res) => {
 
+	const requiredFields = ['id', 'name', 'type', 'amount', 'periodUnit', 'periodType', 'startDate', 'endDate'];
+
+	for (let i = 0; i < requiredFields.length; i++) {
+		const field = requiredFields[i];
+		if(!(field in req.body)) {
+			return res.status(422).json({message: `Missing field: ${field}`});
+		};
+	}
+
 	User
-		.update({username: req.user.username, 'adjustmentEntries.id': req.body.id}, 
-				{$set: {'adjustmentEntries.$': req.body}}, {new: true})
-		.then(message => res.status(201).json(message).end())
+		.findOneAndUpdate({username: req.user.username, 'adjustmentEntries.id': req.body.id}, 
+			{$set: {'adjustmentEntries.$': req.body}}, 
+			{new: true})
+		.then(user => res.status(200).json({user: user.apiRepr()}))
 		.catch(err => res.status(500));
 });
 
@@ -231,17 +245,23 @@ router.put('/me/adjustment-entry', loggedIn, (req, res) => {
 router.delete('/me', loggedIn, (req, res) => {
 	User
 		.findByIdAndRemove(req.user.id)
-		.exec()
-		.then(user => res.status(204).json({redirect: '/'}).end())
+		.then(user => res.status(200).json({redirect: '/'}).end())
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
 // DELETE adjustment entry (password protected)
 router.delete('/me/adjustment-entry', loggedIn, (req, res) => {
+	let requiredField = 'id';
+
+	if(!(requiredField in req.body)) {
+			return res.status(422).json({message: `Missing field: ${requiredField}`});
+		}
+
 	User
-		.update({username: req.user.username}, 
-				{$pull: {adjustmentEntries: {id: req.body.id}}})
-		.then(user => res.status(204).end())
+		.findOneAndUpdate({username: req.user.username}, 
+				{$pull: {adjustmentEntries: {id: req.body.id}}},
+				{new: true})
+		.then(updateRes => res.status(200).json({user: updateRes.apiRepr()}))
 		.catch(err => res.status(500).json({message: 'Internal server error'}));
 })
 
