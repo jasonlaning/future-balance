@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 mongoose.Promise = global.Promise;
 
@@ -16,7 +17,7 @@ const userSchema = mongoose.Schema({
 	firstName: {type: String, default: ""},
 	lastName: {type: String, default: ""},
 	mostRecentBalance: {
-		date: {type: String, default: ""},
+		date: {type: String, default: moment().format('YYYY-MM-DD')},
 		amount: {type: Number, default: 0}
 	},
 	adjustmentEntries: {type: Array, default: []}

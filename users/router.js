@@ -171,7 +171,7 @@ router.post('/me/adjustment-entry', loggedIn, (req, res) => {
 	name = name.trim();
 
 	if (name ==='') {
-		return res.status(422).json({message: 'Incorrect field length: name'});
+		return res.status(422).json({message: 'Please enter a name'});
 	}
 
 	if (typeof amount !== 'number') {
@@ -180,6 +180,10 @@ router.post('/me/adjustment-entry', loggedIn, (req, res) => {
 
 	if (typeof periodUnit !== 'number') {
 		return res.status(422).json({message: 'Incorrect field type: amount'});
+	}
+
+	if (amount < 1) {
+		return res.status(422).json({message: 'Please enter amount'});
 	}
 
 	//return User.adjustmentEntries.push(req.body);
@@ -204,15 +208,56 @@ router.post('/me/adjustment-entry', loggedIn, (req, res) => {
 
 // PUT (password protected, must have session cookie) for editing user data 
 // includes: account info or most recent balance
-router.put('/me', loggedIn, (req, res) => {
+router.put('/me/username', loggedIn, (req, res) => {
 
-	const updated = {};
-	const updateableFields = ['firstName', 'lastName', 'password', 'mostRecentBalance'];
+	if (!('username' in req.body)) {
+		return res.status(422).json({message: 'Please enter a username'});
+	}
+
+	let {username} = req.body;
+
+	if (typeof username !== 'string') {
+		return res.status(422).json({message: 'Incorrect field type: username'});
+	}
+
+	username = username.trim();
+
+	if (username ==='') {
+		return res.status(422).json({message: 'Please enter a username'});
+	}
+
+	User
+		.find({username})
+		.count()
+		.exec()
+		.then(count => {
+			if (count > 0) {
+				return res.status(422).json({message: 'Username already taken'});
+			}
+		})
+	
+	const updated = { username: req.body.username }
+
+	User
+		.findByIdAndUpdate(req.user.id, {$set: updated}, {new: true})
+		.then(user => res.status(200).json({user: user.apiRepr()}))
+		.catch(err => res.status(500).json({message: 'Error, update failed'}));
+
+});
+
+// PUT (password protected, must have session cookie) for editing most recent balance
+router.put('/me/most-recent-balance', loggedIn, (req, res) => {
+
+	/*const updated = {};
+	const updateableFields = ['mostRecentBalance'];
 	updateableFields.forEach(field => {
 		if (field in req.body) {
 			updated[field] = req.body[field];
 		}
-	});
+	});*/
+	const updated = {
+		mostRecentBalance: req.body.mostRecentBalance
+	};
 
 	User
 		.findByIdAndUpdate(req.user.id, {$set: updated}, {new: true})
