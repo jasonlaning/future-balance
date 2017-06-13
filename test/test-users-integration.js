@@ -39,7 +39,7 @@ function generateEntryType() {
 }
 
 function generatePeriodType() {
-	const periodTypes = ['day(s)', 'week(s)', 'month(s)', 'year(s)'];
+	const periodTypes = ['day', 'week', 'month', 'year'];
 	return periodTypes[Math.floor(Math.random() * periodTypes.length)];
 }
 
@@ -173,7 +173,6 @@ describe('Users API resource', function() {
 						.then(user => {
 							user.should.exist;
 							user.username.should.equal(testUsername);
-							user.password.should.equal(testPassword);
 						})
 				})
 		});
@@ -190,7 +189,7 @@ describe('Users API resource', function() {
         					type: 'Expense',
         					amount: 1000,
         					periodUnit: 1,
-        					periodType: 'month(s)',
+        					periodType: 'month',
         					startDate: '20170115',
         					endDate: '20250101'
         					};
@@ -238,28 +237,26 @@ describe('Users API resource', function() {
 		});
 	});
 
-	describe('PUT endpoint to edit user data', function() {
+	describe('PUT endpoint to edit most recent balance', function() {
 
 		let testChanges = {
-			firstName: 'Iceman',
 			mostRecentBalance: {
-				date: '20170501',
+				date: '2017-05-01',
 				amount: 20000
 			}
-        }
+        		}
 
-		it('should save changes to user data', function() {
+		it('should save changes to most recent balance', function() {
 			let agent = chai.request.agent(app);
 			return agent
 				.get('/users/login') // first have to log in
 				.auth('testuser', 'password')
 				.then(() => {				
 					return agent
-						.put('/users/me')
+						.put('/users/me/most-recent-balance')
 						.send(testChanges)
 						.then(res => {
 							res.should.have.status(200);
-							res.body.user.firstName.should.equal(testChanges.firstName);
 							res.body.user.mostRecentBalance.date.should.equal(testChanges.mostRecentBalance.date);
 							res.body.user.mostRecentBalance.amount.should.equal(testChanges.mostRecentBalance.amount);
 						})
@@ -267,7 +264,6 @@ describe('Users API resource', function() {
 							return User
 								.findOne({username: 'testuser'})
 								.then(user => {
-									user.firstName.should.equal(testChanges.firstName);
 									user.mostRecentBalance.date.should.equal(testChanges.mostRecentBalance.date);
 									user.mostRecentBalance.amount.should.equal(testChanges.mostRecentBalance.amount);
 								})
@@ -285,7 +281,7 @@ describe('Users API resource', function() {
 		        type: 'Expense',
 		        amount: 123456,
 		        periodUnit: 2,
-		        periodType: 'year(s)',
+		        periodType: 'year',
 		        startDate: '20170501',
 		        endDate: '20250101'
         				}
