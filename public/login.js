@@ -13,7 +13,7 @@ function signInUser(username, password) {
 	};
 
 	$.ajax(settings).done(function (response) {
-			//$('main').html(response);
+			console.log(response);
 			if (response.user) {
 				location.href = '/dashboard/';
 			}
@@ -25,7 +25,7 @@ function signInUser(username, password) {
 }
 
 
-function watchSubmit() {
+function watchLogIn() {
 	$('.log-in-form').submit(function(event) {
 		event.preventDefault();
 		console.log('here');
@@ -36,4 +36,4 @@ function watchSubmit() {
 	})
 }
 
-$(watchSubmit());
+$(watchLogIn());
