@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>FutureBalance :: Report</title>
+	<title>FutureBalance - Report</title>
 	<meta name="description" content="Track expenses and incomes. Discover future account balances.">
 	<meta name="viewport" content="width=device-width">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
-	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400i" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../css/float-grid.css">	
 	<link rel="stylesheet" type="text/css" href="../css/main.css">	
 </head>
 <body>
 
-<div id="nav-bar-wrap">
-	<div id="nav-bar">
-		<a href="../"><header class="site-title">FutureBalance</header></a>
-		<a href="/dashboard/"><div class="nav-button">View Dashboard</div></a>
+	<div id="nav-bar-wrap">
+		<div id="nav-bar">
+			<a href="../"><header class="site-title">FutureBalance</header></a>
+			<div class="nav-items-wrap">
+					<div class="nav-item"><a href="/dashboard/">Dashboard</a></div>
+					<div class="nav-item nav-current"><div class="nav-border"></div>Report</a></div>
+					<div class="nav-item"><a href="../users/logout"><div class="nav-button">Sign out</div></a></div>
+			</div>
+		</div>
 	</div>
-</div>
 
-<div id="content-wrap">
+	<div class="content-wrap">
 
-	<main>
+		<main>
 
-	</main>
+		</main>
 
-</div>
+	</div>
+
+	<footer>
+	<div id="js-loader"></div>		
+	</footer>
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="http://spin.js.org/spin.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="../mock-data.js"></script>
 <script src="report.js"></script>

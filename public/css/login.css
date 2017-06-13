@@ -1,6 +1,28 @@
-body * {
+* {
   box-sizing: border-box;
+}
+
+* button:hover {
+  cursor: pointer;
+}
+
+body {
   font-family: 'Roboto', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: inherit;
+}
+
+.site-title a {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: black;
 }
 
 body {
@@ -27,7 +49,7 @@ header {
 }
 
 .log-in-form, form input, form button {
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .log-in-form {
