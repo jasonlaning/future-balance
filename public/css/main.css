@@ -28,9 +28,11 @@ a {
 }
 
 .site-title {
+	display: inline-block;
 	font-size: 22px;
 	font-weight: bold;
 	line-height: 60px;
+	color: black;
 }
 
 a:visited .site-title {
@@ -39,6 +41,7 @@ a:visited .site-title {
 
 .nav-button {
 	position: absolute;
+	display: inline-block;
 	right: 0;
 	top: 0;
 	height: 44px;
@@ -47,6 +50,18 @@ a:visited .site-title {
 	line-height: 44px;
 	color: white;
 	background-color: green;
+	text-align: center;
+	border-radius: 5px;
+}
+
+.logout-button {
+	display: inline-block;
+	height: 44px;
+	padding: 0 15px;
+	margin: 8px 0;
+	line-height: 44px;
+	color: white;
+	background-color: red;
 	text-align: center;
 	border-radius: 5px;
 }

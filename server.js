@@ -1,11 +1,21 @@
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-var app = express();
+const {router: usersRouter} = require('./users/router');
+
+mongoose.Promise = global.Promise;
+
+const {PORT, DATABASE_URL} = require('./config');
+
+const app = express();
 
 app.use(express.static('public'));
 
 app.use(morgan('common'));
+
+app.use('/users', usersRouter);
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');
@@ -13,31 +23,40 @@ app.get('/', (req, res) => {
 
 let server;
 
-function runServer() {
-	const port = process.env.PORT || 8080;
+function runServer(databaseUrl, port=PORT) {
 	return new Promise((resolve, reject) => {
-		server = app.listen(port, () => {
-			resolve(server);
-		}).on('error', err => {
-			reject(err)
+		mongoose.connect(databaseUrl, err => {
+			if (err) {
+				return reject(err);
+			}
+			server = app.listen(port, () => {
+				console.log(`Your app is listening on port ${port} and using database ${databaseUrl}`);
+				resolve();
+			})
+			.on('error', err => {
+				mongoose.disconnect();
+				reject(err);
+			});
 		});
 	});
 }
 
 function closeServer() {
-	return new Promise((resolve, reject) => {
-		server.close(err => {
-			if (err) {
-				reject(err);
-				return;
-			}
+	return mongoose.disconnect().then(() => {
+		return new Promise((resolve, reject) => {
+			console.log('Closing server');
+			server.close(err => {
+				if (err) {
+					return reject(err);
+				}
 			resolve();
+			});
 		});
 	});
 }
 
 if (require.main === module) {
-	runServer().catch(err => console.error(err));
+	runServer(DATABASE_URL).catch(err => console.error(err));
 };
 
 module.exports = {app, runServer, closeServer};
