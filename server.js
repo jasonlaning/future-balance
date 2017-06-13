@@ -11,6 +11,10 @@ const {PORT, DATABASE_URL} = require('./config');
 
 const app = express();
 
+app.use('/spin', express.static(__dirname + '/node_modules/spin/'));
+
+app.use('/moment', express.static(__dirname + '/node_modules/moment/'));
+
 app.use(express.static('public'));
 
 app.use(morgan('common'));
