@@ -289,6 +289,7 @@ function renderDetail(thisDateBox) {
 
 	$('main').one('click', '.pop-window-background', function(event) {
 		event.stopPropagation();
+		$('body').css('overflow', 'auto');
 		$('.pop-window-background').remove();
 		watchForDetailClicks();
 	});
@@ -302,6 +303,7 @@ function getAdjustmentsAndCalculateAdjustments() {
 function watchForDetailClicks() {
 	$('main').one('click', '.balance-increased, .balance-decreased', function(event) {
 		event.stopPropagation();
+		$('body').css('overflow', 'hidden');
 		renderDetail($(this));
 
 	})
