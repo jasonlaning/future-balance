@@ -857,11 +857,11 @@ footer {
 
 	#sign-up {
 		float: none;
-		margin: -20px auto;
+		margin: -70px auto;
 		width: auto;
 		max-width: 400px;
 		padding-left: 0;
-		padding-top: 0;
+		padding-top: 70px;
 	}
 
 	.top-row {
@@ -996,6 +996,8 @@ footer {
 
 	.nav-item a {
 		color: gray;
+		width: 100%;
+		display: block;
 	}
 
 	.nav-button {
@@ -1094,10 +1096,21 @@ footer {
 
 @media only screen and (max-width: 450px) {
 
-	.pop-window {
+/*	.pop-window {
 		width: 320px;
 		margin: -250px 0 0 -160px;
 		padding: 30px 20px 0 20px;
+	}*/
+
+	.pop-window {
+		overflow-y: scroll;
+    		height: 100%;
+    		width: 100%;
+    		margin: 0;
+    		padding: 30px;
+    		top: 0;
+    		left: 0;
+    		border-radius: 0;
 	}
 
 	.pop-window h2 {
@@ -1106,6 +1119,10 @@ footer {
 
 	.month-row h2 {
 		font-size: 34px;
+	}
+
+	#about h2 {
+		font-size: 20px;
 	}
 
 	.front-page header {
