@@ -8,6 +8,10 @@
 
 body {
   font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  background-color: #e6e6e6;
 }
 
 a {
@@ -23,14 +27,6 @@ a:visited {
   font-size: 32px;
   font-weight: 400;
   color: black;
-}
-
-body {
-  padding: 40px 15px;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  background-color: #e6e6e6;
 }
 
 .container {

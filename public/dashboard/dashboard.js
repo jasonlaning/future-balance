@@ -97,7 +97,7 @@ function renderDashboard(user) {
 		'<div class="settings-box"><p><span class="settings">Account: </span><span class="username">' + 
 		DASH_USER.username + '</span></p>' +
 		'<p>Last Balance Set:<span class="last-balance"> $' + DASH_USER.mostRecentBalance.amount + 
-		'</span><span class="js-previous-balance"> (<a href="#" title="set new">set new</a>)</span><br />' +
+		'</span><span class="js-previous-balance"> (<a href="#" title="set new">set&nbsp;new</a>)</span><br />' +
 		'<span class="previous-bal-date">on ' + DASH_USER.mostRecentBalance.date + 
 		'</span></p></div>' +
 		'<div class="add-item-box"><div class="plus-sign" title="Add New Item"></div>' +

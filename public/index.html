@@ -16,11 +16,15 @@
 	<div id="nav-bar-wrap">
 		<div id="nav-bar">
 			<a href="../"><header class="site-title">FutureBalance</header></a>
+			<div class="burger-container">
+				<div class="burger">&#9776;</div>
+				<div class="x">&#735;</div>
+			</div>
 			<div class="nav-items-wrap">
-					<div class="nav-item"><a href="#about">About</a></div>
-					<div class="nav-item js-demo"><a href="">Demo</a></div>
-					<div class="nav-item"><a href="#sign-up">Sign up</a></div>
-					<div class="nav-item"><a href="#sign-up"><div class="nav-button">Sign in</div></a></div>
+				<div class="nav-item" title="about"><a href="#about">About</a></div>
+				<div class="nav-item js-demo" title="demo"><a href="">Demo</a></div>
+				<div class="nav-item" title="sign up"><a href="#sign-up">Sign up</a></div>
+				<div class="nav-item" title="sign in"><a href="#sign-in"><div class="nav-button">Sign in</div></a></div>
 			</div>
 		</div>
 	</div>
@@ -33,7 +37,25 @@
 		</main></div>
 
 	<div class="gray-back">
-		<div id="about" class="content-wrap">
+		<div class="about-box content-wrap">
+				<div id="aboutlink"></div>				
+				<div id="about">
+					<h2>How much money will you have in 6 months?</h2>
+					<p>Planning for future spending would be simple (or, at least, easier?) if every
+					job paid monthly on the first of every month, and if every bill or expense were 
+					due monthly on the first of every month.</p>
+					<p class="center"><i>But that never happens.</i></p>
+					<p>Instead, planning ahead for expenses and income is complicated and
+					often frustrating – especially if you have a job that pays weekly or bi-weekly, but most of your expenses are monthly. <b>FutureBalance</b> helps you to:</p>
+					<ol>
+						<li>Use a <b>dashboard</b> to save income and expenses that you know will repeat regularly.
+						Edit the entries at any time, or set a new current balance to create a new forecast.</li>
+						<li>View a calendar <b>report</b> that calculates your daily balances for future dates,
+						based on your current balance and any repeating income or expenses that you saved.</li>
+						<li>View <b>details</b> for days on your calendar report that have an income or expense event, to quickly see what's causing
+						your balance to change.</li>
+					</ol>
+				</div>	
 				<div id="sign-up">
 					<form class="sign-up-form" action="#">
 						<h2>Create an account</h2>
@@ -52,31 +74,12 @@
 							<span class="js-message"></span>
 						</div>
 					</form>
-				</div>
-				<h2>How much money will you have in 6 months?</h2>
-				<p>Planning for future spending would be simple (or, at least, easier?) if every
-				job paid monthly on the first of every month, and if every bill or expense were 
-				due monthly on the first of every month.</p>
-				<p class="center"><i>But that never happens.</i></p>
-				<p>Instead, planning ahead for expenses and income is complicated and
-				often frustrating – especially if you have a job that pays weekly or bi-weekly, but most of your expenses are monthly. <b>FutureBalance</b> helps you to:</p>
-				<ol>
-					<li>Use a <b>dashboard</b> to save income and expenses that you know will repeat regularly.
-					Edit the entries at any time, or set a new current balance to create a new forecast.</li>
-					<li>View a calendar <b>report</b> that calculates your daily balances for future dates,
-					based on your current balance and any repeating income or expenses that you saved.</li>
-					<li>View <b>details</b> for days on your calendar report that have an income or expense event, to quickly see what's causing
-					your balance to change.</li>
-
-
-
-			
+				</div>		
 		</div>
-	</div>		
-
-	
+	</div>			
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="menu.js"></script>
 	<script src="check-login-status.js"></script>
 	<script src="sign-up.js"></script>
 
