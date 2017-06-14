@@ -18,6 +18,11 @@ a {
   text-decoration: none;
 }
 
+.log-in-form .message-box a {
+  color: #a5a5a5;
+  text-decoration: underline;
+}
+
 a:visited {
   color: inherit;
 }

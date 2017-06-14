@@ -1099,6 +1099,10 @@ footer {
 		font-size: 12px;
 	}
 
+	.pop-exit {
+		top: -20px;
+	}
+
 
 
 }
@@ -1179,6 +1183,10 @@ footer {
 
    	.new-adj-form button#save {
 		width: 192px;
+	}
+
+	.pop-exit {
+		top: -12px;
 	}
 
 }
