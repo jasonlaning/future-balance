@@ -142,7 +142,7 @@ main {
 
 .about-box {
 	min-height: 750px;
-	margin-top: -5px;
+	margin-top: -7px;
 }
 
 #about {
@@ -812,6 +812,14 @@ footer {
 	display: none;
 }
 
+.pop-exit {
+	position: absolute;
+	top: -46px;
+	right: 13px;
+	font-size: 46px;
+	color: #d0d0d0;
+}
+
 @media only screen and (max-width: 800px) {
 
 	.nav-button {
@@ -1033,6 +1041,7 @@ footer {
 	.about-box {
 		padding-left: 10px;
 		padding-right: 10px;
+		margin-top: -5px;
 	}
 
 	.nav-items-wrap {
@@ -1173,6 +1182,42 @@ footer {
 	}
 
 }
+
+@media only screen and (max-width: 400px) {
+
+	p[entry-name = name] {
+		font-size: 19px;
+	} 
+
+	[entry-name = type][amount-type = Income].dashboard-entry-box, 
+	[entry-name = type][amount-type = Expense].dashboard-entry-box {
+    		width: 45px;
+    		background-size: contain;
+    		
+    	}
+
+    	[amount-type = Expense].dashboard-entry-box .entry-type, 
+    	[amount-type = Income].dashboard-entry-box .entry-type {
+    		font-size: 12px;
+    		overflow: visible;
+    		bottom: -4px;
+    	}
+
+    	[amount-type = Income].dashboard-entry-box .entry-type {
+    		bottom: 0px;
+    	}
+
+	.row-item .col-4{
+		margin-left: 18%;
+	}
+
+	[entry-name = name].dashboard-entry-box, [entry-name = name].dashboard-header-box {
+		padding-left: 10px;
+	}
+
+	p[entry-name = date-range] {
+ 		font-size: 12px;
+	}
 
 @media only screen and (max-width: 350px) {
 
