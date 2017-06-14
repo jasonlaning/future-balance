@@ -23,10 +23,8 @@ function getAdjustments(callbackFn) {
     $('#js-loader').append('<p class="spinner-message"><i>generating report</i></p>');
 
 	$.ajax(settings).done(function(response) {
-		console.log("response is: ", response.user);
 		if (response.user) {
 			REPORT.mostRecentBalance = response.user.mostRecentBalance;
-			console.log('REPORT.mostRecentBalance ', REPORT.mostRecentBalance);
 			callbackFn(response.user);
 		}
 		else {
@@ -43,13 +41,18 @@ function calculateAdjustments(adjustmentsData) {
 	var toDate = moment().add(1, 'years');
 	var today = moment();
 
+	console.log(adjustmentsData);
+
+	console.log('datecounter before ', dateCounter);
+
+	console.log('today before ', today);
+
 	for (dateCounter; dateCounter.isBefore(moment(toDate).add(1, 'days')); dateCounter.add(1, 'days')) {
 		adjustments.forEach(function(adj) {
 			var adjStart = moment(adj.startDate);
-			//console.log(adjStart.format('D'));
 			var adjEnd = moment(adj.endDate);
 			if (dateCounter.isAfter(moment(adjStart.clone()).subtract(1, 'days')) && dateCounter.isBefore(moment(adjEnd).add(1, 'days'))) {
-				if ((adj.periodType === 'month') && (adjStart.format('D') === dateCounter.format('D')) && ((dateCounter.diff(adj.Start, 'months')) % adj.periodUnit === 0)) {
+				if ((adj.periodType === 'month') && (adjStart.format('D') === dateCounter.format('D')) && ((dateCounter.diff(adjStart, 'months')) % adj.periodUnit === 0)) {
 					if (REPORT.adjustments[dateCounter.format('YYYY-MM-DD')]) {
 						REPORT.adjustments[dateCounter.format('YYYY-MM-DD')].push(adj);
 					}
@@ -57,7 +60,8 @@ function calculateAdjustments(adjustmentsData) {
 						REPORT.adjustments[dateCounter.format('YYYY-MM-DD')] = [adj];
 					}
 				}
-				if ((adj.periodType === 'week') && (adjStart.format('ddd') === dateCounter.format('ddd')) && ((dateCounter.diff(adj.Start, 'weeks')) % adj.periodUnit === 0)) {
+				console.log('week compare: ', dateCounter, adj.Start);
+				if ((adj.periodType === 'week') && (adjStart.format('ddd') === dateCounter.format('ddd')) && ((dateCounter.diff(adjStart, 'weeks')) % adj.periodUnit === 0)) {
 					if (REPORT.adjustments[dateCounter.format('YYYY-MM-DD')]) {
 						REPORT.adjustments[dateCounter.format('YYYY-MM-DD')].push(adj);
 					}
@@ -70,6 +74,7 @@ function calculateAdjustments(adjustmentsData) {
 		});
 
 	}
+	console.log(REPORT.adjustments);
 	calculateForecast(REPORT.adjustments);
 }
 
@@ -80,9 +85,6 @@ function calculateForecast(adjustments) {
 	var dateCounter = moment(REPORT.mostRecentBalance.date);
 	var currentBalance = REPORT.mostRecentBalance.amount;
 	var balanceChanged;
-
-	console.log('dateCounter: ', dateCounter);
-	console.log('currentBalance: ', currentBalance);
 
 	if (!dateCounter || typeof(currentBalance) !== 'number') {
 		$('main').html('No data for report.');
@@ -122,16 +124,21 @@ function calculateForecast(adjustments) {
 	}
 }
 
-function renderForecast(forecastData) {
+function roundNumber(number, decimalPlaces) {
+	decimalPlaces = Math.abs(parseInt(decimalPlaces)) || 0;
+	var multiplier = Math.pow(10, decimalPlaces);
+	return (Math.round(number * multiplier) / multiplier).toFixed(2);
+}
 
-	console.log(forecastData);
+function renderForecast(forecastData) {
 
 	var forecastHtml = '';
 	var dateCounter = REPORT.nextRenderDate;
 	var totalMonths = 12; // months to render at one time
 	var currentMonth = '';
 	var weekDays = moment.weekdays();
-	var today = moment().format('L');
+	var weekDaysShort = moment.weekdaysShort();
+	var today = moment().format('YYYY-MM-DD'); //removed .format('L')
 	var isToday = '';
 	var monthDays;
 	var weekdayCounter;
@@ -150,10 +157,8 @@ function renderForecast(forecastData) {
 	for (var monthcounter = 1; monthcounter <= totalMonths; monthcounter++) {
 
 		currentMonth = dateCounter.format('MMMM');
-		console.log('currentMonth: ', currentMonth);
-
+	
 		monthDays = dateCounter.daysInMonth();
-		console.log('monthDays: ', monthDays);
 
 		// make month header and start row for days-of-week header
 		forecastHtml += '<header class="row month-row">' + 
@@ -164,7 +169,7 @@ function renderForecast(forecastData) {
 		// make days-of-week header for the month
 		for (var i = 0; i < 7; i++) {
 			forecastHtml += '<div class="col-2"><div class="date-box ' +
-			weekDays[i] + '">' + weekDays[i]  + '</div></div>'
+			weekDaysShort[i] + '">' + weekDaysShort[i]  + '</div></div>'
 		};
 
 		// end days-of-week header row and start new row
@@ -172,28 +177,25 @@ function renderForecast(forecastData) {
 
 		weekdayCounter = 0;
 		firstWeekdayOfMonth = dateCounter.date(1).format('dddd');
-		console.log('firstWeekdayOfMonth: ', firstWeekdayOfMonth);
 
 		// make empty date boxes until first of month
 		while (weekDays[weekdayCounter] !== firstWeekdayOfMonth) {
-			console.log('weekDays[weekdayCounter]: ', weekDays[weekdayCounter]);
 			forecastHtml += '<div class="col-2"><div class="date-box empty ' + 
 			weekDays[weekdayCounter] + '"></div></div>';
 			weekdayCounter++;
-			console.log('Compare: ', weekDays[weekdayCounter], firstWeekdayOfMonth);
 		}
 
 		var dayOfWeek;
 		var changeTypeTag = '';
+		var thisAmount;
 
-		// make boxes for every day in month
+		// make boxes for every day in month                                                    moment error bet 180 and 209?
 		for (var i = 1; i <= monthDays; i++) {
 
-			console.log('compare if today: ', dateCounter, ' ', today);
-
-
-			if (dateCounter.format('L') === today) {
+			if (dateCounter.format('YYYY-MM-DD') === today) {
 				isToday = 'today';
+			} else if (dateCounter.isBefore(today)) {
+				isToday = 'before-today';
 			} else {
 				isToday = '';
 			};
@@ -215,20 +217,19 @@ function renderForecast(forecastData) {
 				}
 			};
 
-			
+			thisAmount = todayForecastData.amount;
 
-			console.log('changetypehtml: ', changeTypeHtml);
+			if ((thisAmount % 1) !== 0) {
+				thisAmount = roundNumber(thisAmount, 2);
+			}
+			console.log(thisAmount);
 
 			changeTypeTag = changeTypeHtml[todayForecastData.changeType];
-
-			console.log('changetypetag: ', changeTypeTag);
 
 			forecastHtml += '<div class="col-2"><div entry-date="' + dateCounter.format('YYYY-MM-DD') + '" ' +
 				'class="date-box ' + dateCounter.format('dddd') + ' ' + isToday + ' ' +
 				changeTypeTag + '<div class="date-num">' + dateCounter.format('D') +
-				'</div><div class="balance">' + todayForecastData.amount + '</div></div></div>';
-
-			console.log('end of row if saturday: ', dayOfWeek);
+				'</div><div class="balance">' + thisAmount + '</div></div></div>';
 
 			// end row if Saturday
 			if (dayOfWeek === 'Saturday'){
@@ -237,9 +238,7 @@ function renderForecast(forecastData) {
 			
 
 			dateCounter = dateCounter.add(1, 'days');
-			console.log('dateCounter after add 1 day: ', dateCounter);
 		}
-		console.log('day of week after datecounter added day: ', dayOfWeek);
 
 		// if month doesn't end on saturday, fill week with blank boxes
 		if (dayOfWeek !== 'Saturday') {
@@ -254,7 +253,6 @@ function renderForecast(forecastData) {
 
 			// increment to next day to be rendered
 			weekdayCounter++;
-			console.log('weekdayCounter: ', weekdayCounter, weekDays[weekdayCounter]);
 
 			while (weekdayCounter < 7) {
 				forecastHtml += '<div class="col-2"><div class="date-box empty ' + 
@@ -271,8 +269,6 @@ function renderForecast(forecastData) {
 	REPORT.nextRenderDate = dateCounter;
 
 	$('main').html(forecastHtml);
-
-	console.log(REPORT, REPORT.nextRenderDate, REPORT.adjustments, REPORT.balances)
 
 }
 
