@@ -142,7 +142,7 @@ main {
 
 .about-box {
 	min-height: 750px;
-	margin-top: -7px;
+	margin-top: -5px;
 }
 
 #about {
@@ -151,6 +151,8 @@ main {
 	position: relative;
 	top: -70px;
 	padding-top: 70px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 #about h2 {
@@ -1095,7 +1097,7 @@ footer {
 	.pop-window {
 		width: 320px;
 		margin: -250px 0 0 -160px;
-		padding: 15px 8px 0 8px;
+		padding: 30px 20px 0 20px;
 	}
 
 	.pop-window h2 {
@@ -1141,12 +1143,16 @@ footer {
 		font-size: 18px;
 	}
 
+	.edit-adj-form button#save {
+    		width: 115px;
+	}
+
 	button#cancel, button#delete {
    		width: 67px;
    	}
 
    	.new-adj-form button#save {
-		width: 217px;
+		width: 192px;
 	}
 
 }
