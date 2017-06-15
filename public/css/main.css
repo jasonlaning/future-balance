@@ -121,7 +121,7 @@ main {
 
 .front-page h1 {
 	font-family: 'Roboto Condensed', sans-serif;
-	font-size: 58px;
+	font-size: 64px;
 	font-weight: 700;
 	margin: 0;
 }
@@ -237,11 +237,14 @@ main {
 	text-align: center;
 }
 
+a.js-demo:hover {
+	color: #66c470;
+}
 
-
-/* dashboard and report below */
-
-/* sad red: #eb5757, hover-red: #FF0000 ;*/
+a.js-demo {
+	color:  #339933;
+	font-weight: bold;
+}
 
 .add-item-box {
 	float: left;
@@ -251,12 +254,12 @@ main {
 }
 
 .plus-sign {
-    border-radius: 50%;
-    height: 50px;
-    width: 50px;
-    background-image: url(../images/plus-sign.png);
-    background-position: center;
-    background-repeat: no-repeat;
+	border-radius: 50%;
+	height: 50px;
+	width: 50px;
+	background-image: url(../images/plus-sign.png);
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .add-item {
@@ -265,7 +268,7 @@ main {
 	line-height: 30px;
 	top: 10px;
 	padding-left: 15px;
-    margin-left: 50px;
+    	margin-left: 50px;
 }
 
 .row-heading {
@@ -618,15 +621,20 @@ p[entry-name = date-range] {
 }
 
 .pop-window {
-    position: fixed;
-    display: block;
-    padding: 20px 35px 0 35px;
-    width: 400px;
-    top: 50%;
-    left: 50%;
-    margin: -250px 0 0 -200px;
-    border-radius: 5px;
-    background-color: white;
+	position: fixed;
+	display: block;
+	padding: 20px 35px 0 35px;
+	width: 400px;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto auto;
+	border-radius: 5px;
+	background-color: white;
+	height: 482px;
+	overflow: auto;
+	max-height: 100%;
 }
 
 .pop-window h2 {
@@ -693,32 +701,31 @@ input[type=radio] {
 }
 
 .edit-adj-form button, .new-adj-form button {
-	margin: 10px 5px 0 5px;
+	margin: 10px 0;
 	padding: 10px 0;
 }
 
 button#save {
-	width: 140px;
+	width: 40%;
 	color: white;
 }
 
 .new-adj-form button#save {
-	width: 230px;
+	width: 70%;
 }
 
-
-
 button#cancel, button#delete {
-	width: 80px;
+	width: 27%;
 	background-color: white;
 	border: 1px solid #9a9a9a;
 	color: gray;
+	margin-left: 3%;
 }
 
 button#cancel:hover {
 	background-color: #efefef;
 	border: 1px solid #efefef;
-    color: #616161;
+    	color: #616161;
 }
 
 button#delete:hover {
@@ -818,6 +825,17 @@ footer {
 	right: 13px;
 	font-size: 46px;
 	color: #d0d0d0;
+}
+
+.small-pop {
+	height: 292px;
+}
+
+@media only screen and (max-width: 950px) {
+
+	.front-page h1 {
+	font-size: 58px;
+	}
 }
 
 @media only screen and (max-width: 800px) {
@@ -1109,14 +1127,7 @@ footer {
 
 @media only screen and (max-width: 450px) {
 
-/*	.pop-window {
-		width: 320px;
-		margin: -250px 0 0 -160px;
-		padding: 30px 20px 0 20px;
-	}*/
-
 	.pop-window {
-		overflow-y: scroll;
     		height: 100%;
     		width: 100%;
     		margin: 0;
@@ -1173,6 +1184,8 @@ footer {
 		font-size: 18px;
 	}
 
+	/*
+
 	.edit-adj-form button#save {
     		width: 115px;
 	}
@@ -1183,7 +1196,7 @@ footer {
 
    	.new-adj-form button#save {
 		width: 192px;
-	}
+	} */
 
 	.pop-exit {
 		top: -12px;
