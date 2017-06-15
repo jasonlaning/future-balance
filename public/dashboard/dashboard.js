@@ -93,9 +93,18 @@ function renderDashboard(user) {
 						'<div class="col-4"><div class="dashboard-header-box"></div></div>' +
 						'</div>';
 
+	// display 'Demo' for demo username
+	var username;
+
+	if (DASH_USER.firstName === 'Demo') {
+		username = 'Demo';
+	} else {
+		username = DASH_USER.username
+	}
+
 	var dashboardHtml = '<header><div class="row top-row">' +
 		'<div class="settings-box"><p><span class="settings">Account: </span><span class="username">' + 
-		DASH_USER.username + '</span></p>' +
+		username + '</span></p>' +
 		'<p>Last Balance Set:<span class="last-balance"> $' + DASH_USER.mostRecentBalance.amount + 
 		'</span><span class="js-previous-balance"> (<a href="#" title="set new">set&nbsp;new</a>)</span><br />' +
 		'<span class="previous-bal-date">on ' + DASH_USER.mostRecentBalance.date + 
@@ -184,7 +193,7 @@ function renderEditEntryForm (entryId) {
 	windowHtml += '</select>' +	
 		'<label for="start-date">Start Date</label>' +
 		'<input type="date" name="startDate" id="start-date" value="' + 
-		moment(entry.startDate).format('YYYY-MM-DD') + '" min ="' + moment().format('YYYY-MM-DD') + '" required>' +
+		moment(entry.startDate).format('YYYY-MM-DD') + '" required>' +
 		'<label for="end-date">End Date</label>' +
 		'<input type="date" name="endDate" id="end-date" value="' + moment(entry.endDate).format('YYYY-MM-DD') + '" required>' +
 		'<button id="save">Save</button>' +
@@ -220,7 +229,7 @@ function renderNewEntryForm() {
   		'</select><label for="start-date">Start Date</label>' +
 		'<input type="date" name="startDate" id="start-date" ' +
 		'value="' + today + '"><label for="end-date">End Date</label><input type="date" name="endDate" ' +
-		'id="end-date" value="2025-01-01">' +
+		'id="end-date" value="2055-01-01">' +
 		'<button id="save">Save</button>' +
 		'<button id="cancel" value="cancel">Cancel</button><div class="message-box">' +
 		'<span class="js-message"></span></div></form></div></div>';
@@ -234,7 +243,7 @@ function renderNewBalanceForm() {
 
 	var today = moment().format('YYYY-MM-DD');
 
-	var formHtml = '<div class="pop-window-background"><div class="pop-window">' +
+	var formHtml = '<div class="pop-window-background"><div class="pop-window small-pop">' +
 		'<form class="new-adj-form"><h2>Set New Balance</h2>' +
 		'<label for="amount">Amount</label><input type="number" ' +
 		'name="amount" id="amount" ' +
