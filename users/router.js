@@ -207,7 +207,6 @@ router.post('/me/adjustment-entry', loggedIn, (req, res) => {
 });
 
 // PUT (password protected, must have session cookie) for editing user data 
-// includes: account info or most recent balance
 router.put('/me/username', loggedIn, (req, res) => {
 
 	if (!('username' in req.body)) {
