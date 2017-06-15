@@ -35,7 +35,7 @@ a:visited {
 }
 
 .container {
-  width: 400px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -74,7 +74,7 @@ header {
 }
 
 .log-in-form input, .log-in-form button {
-  width: 320px;
+  width: 100%;
   padding: 15px;
 }
 
