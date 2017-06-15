@@ -2,6 +2,8 @@
 
 Tracks repeating expenses and income and generates a calendar report that predicts daily account balances. 
 
+Live version: [https://future-balance.herokuapp.com/](https://future-balance.herokuapp.com/)
+(free hosting and server sleeps, so may take a few seconds to wake up)
 ## Features ##
 
 Users can:
