@@ -41,12 +41,6 @@ function calculateAdjustments(adjustmentsData) {
 	var toDate = moment().add(1, 'years');
 	var today = moment();
 
-	console.log(adjustmentsData);
-
-	console.log('datecounter before ', dateCounter);
-
-	console.log('today before ', today);
-
 	for (dateCounter; dateCounter.isBefore(moment(toDate).add(1, 'days')); dateCounter.add(1, 'days')) {
 		adjustments.forEach(function(adj) {
 			var adjStart = moment(adj.startDate);
@@ -60,7 +54,7 @@ function calculateAdjustments(adjustmentsData) {
 						REPORT.adjustments[dateCounter.format('YYYY-MM-DD')] = [adj];
 					}
 				}
-				console.log('week compare: ', dateCounter, adj.Start);
+
 				if ((adj.periodType === 'week') && (adjStart.format('ddd') === dateCounter.format('ddd')) && ((dateCounter.diff(adjStart, 'weeks')) % adj.periodUnit === 0)) {
 					if (REPORT.adjustments[dateCounter.format('YYYY-MM-DD')]) {
 						REPORT.adjustments[dateCounter.format('YYYY-MM-DD')].push(adj);
@@ -74,7 +68,6 @@ function calculateAdjustments(adjustmentsData) {
 		});
 
 	}
-	console.log(REPORT.adjustments);
 	calculateForecast(REPORT.adjustments);
 }
 
@@ -138,14 +131,13 @@ function renderForecast(forecastData) {
 	var currentMonth = '';
 	var weekDays = moment.weekdays();
 	var weekDaysShort = moment.weekdaysShort();
-	var today = moment().format('YYYY-MM-DD'); //removed .format('L')
+	var today = moment().format('YYYY-MM-DD'); 
 	var isToday = '';
 	var monthDays;
 	var weekdayCounter;
 	var firstWeekdayOfMonth;
 
 	// set html for detail pop-up for dates that have adjustments
-
 	var detailHtml = '<div class="detail">(detail)</div>';
 
 	var changeTypeHtml = {
@@ -189,7 +181,7 @@ function renderForecast(forecastData) {
 		var changeTypeTag = '';
 		var thisAmount;
 
-		// make boxes for every day in month                                                    moment error bet 180 and 209?
+		// make boxes for every day in month
 		for (var i = 1; i <= monthDays; i++) {
 
 			if (dateCounter.format('YYYY-MM-DD') === today) {
@@ -222,7 +214,6 @@ function renderForecast(forecastData) {
 			if ((thisAmount % 1) !== 0) {
 				thisAmount = roundNumber(thisAmount, 2);
 			}
-			console.log(thisAmount);
 
 			changeTypeTag = changeTypeHtml[todayForecastData.changeType];
 
@@ -307,11 +298,6 @@ function watchForDetailClicks() {
 		renderDetail($(this));
 
 	})
-
-	/*$('main').on('mouseleave', '.col-2 .balance-increased', function(event) {
-		event.stopProgagation();
-		$(this).find('.detail-pop').toggleClass('hide');
-	})*/
 }
 
 $(watchForDetailClicks());

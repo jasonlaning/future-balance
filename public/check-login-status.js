@@ -23,7 +23,6 @@ function checkIfLoggedIn() {
 function watchLogIn() {
 	$('.nav-button').click(function(event) {
 		event.preventDefault();
-		console.log('ahoy');
 		checkIfLoggedIn();
 	});
 }

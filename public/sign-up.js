@@ -149,7 +149,6 @@ function watchDemoClick() {
 function watchSignUp() {
 	$('.sign-up-form').submit(function(event) {
 		event.preventDefault();
-		console.log('here');
 		var username = $('#username').val();
 		var password = $('#password').val();
 		var passwordConfirm = $('#passwordConfirm').val();

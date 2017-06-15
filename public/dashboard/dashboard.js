@@ -24,7 +24,6 @@ function getUser(callbackFn) {
 	};
 
 	$.ajax(settings).done(function(response) {
-		console.log('Fetched user is: ', response.user);
 		if (response.user) {	
 			callbackFn(updateDASH_USER(response.user));
 		}
@@ -35,9 +34,6 @@ function getUser(callbackFn) {
 }
 
 function sendUserData(userData, endPoint, method) {
-
-	console.log(userData, endPoint, method);
-
 	
 	var settings = {
 		url: endPoint,
@@ -47,15 +43,12 @@ function sendUserData(userData, endPoint, method) {
 		dataType: 'json',
 		error: function(res) {
 			var message = res.responseJSON.message;
-			console.log('the errorrrrr: ', message);
 			$('.js-message').html(message);
 			}
 	};
 
 	$.ajax(settings)
 		.done(function (response) {
-			//$('.js-message').html('Success! Signing in.');
-			console.log('the response: ', response)
 			closePopWindow();
 			getUser(renderDashboard);
 		})
@@ -71,15 +64,11 @@ function deleteEntry(entryId, endPoint) {
 		dataType: 'json',
 		error: function(res) {
 			var message = res.responseJSON.message;
-			console.log('the errorrrrr: ', message);
-			//$('.js-message').html(message);
 			}
 	};
 
 	$.ajax(settings)
 		.done(function (response) {
-			//$('.js-message').html('Success! Signing in.');
-			console.log('the response: ', response)
 			closePopWindow();
 			getUser(renderDashboard);
 		})
@@ -314,7 +303,6 @@ function watchForNewEntryFormClicks() {
 			newEntry[o.name] = o.value;
 			}
 		});
-		console.log('newEntry = ', newEntry);
 
 		sendUserData(newEntry, endPoint, method);
 	})
@@ -345,8 +333,6 @@ function watchForNewBalanceFormClicks() {
 		var formData = $('.new-adj-form').serializeArray();
 		var newEntry = {};
 
-		console.log('formData: ', formData);
-
 		formData.forEach(function(o) {
 			if (o.name === 'amount') {
 				newEntry[o.name] = Math.abs(o.value * 1);
@@ -359,8 +345,6 @@ function watchForNewBalanceFormClicks() {
 			amount: newEntry.amount,
 			date: newEntry.date
 		}}
-
-		console.log('newEntry = ', newEntry);
 
 		sendUserData(newEntry, endPoint, method);
 	})
@@ -425,11 +409,8 @@ function watchForEditEntryFormClicks(entryId) {
 			}
 		});
 
-		console.log('newEntry = ', newEntry);
-
 		sendUserData(newEntry, endPoint, method);
 	})
-
 
 }
 
@@ -437,7 +418,6 @@ function watchForAddNewClicks() {
 	$('#js-container').on('click', '.plus-sign, .add-item', function(event) {
 		event.stopPropagation();
 		event.preventDefault();
-		console.log('here');
 		renderNewEntryForm();
 	});
 }
@@ -456,26 +436,9 @@ function watchForRowClicks() {
 	event.stopPropagation();
 	event.preventDefault();
 	var entryId = $(this).attr('adj-entry-id');
-	console.log(entryId);
 	renderEditEntryForm(entryId);
 	});
 }
-
-/*
-function watchForHover() {
-
-	var dropdown = '<ul class="dropdown"><li>Change Password</li><li>Delete Account</li></ul>'
-	$('#js-container').on('mouseenter', 'p[title = "Edit Account Settings"]', function(event) {
-		console.log('mouseenter');
-		$(this).append(dropdown);
-	}).on('mouseleave', 'p[title = "Edit Account Settings"]', function(event) {
-		console.log('mouseleave');
-		$(this).find('.dropdown').remove();
-	})
-
-}
-
-$(watchForHover());*/
 
 $(watchForAddNewClicks());
 

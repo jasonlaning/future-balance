@@ -248,13 +248,6 @@ router.put('/me/username', loggedIn, (req, res) => {
 // PUT (password protected, must have session cookie) for editing most recent balance
 router.put('/me/most-recent-balance', loggedIn, (req, res) => {
 
-	/*const updated = {};
-	const updateableFields = ['mostRecentBalance'];
-	updateableFields.forEach(field => {
-		if (field in req.body) {
-			updated[field] = req.body[field];
-		}
-	});*/
 	const updated = {
 		mostRecentBalance: req.body.mostRecentBalance
 	};

@@ -13,7 +13,6 @@ function signInUser(username, password) {
 	};
 
 	$.ajax(settings).done(function (response) {
-			console.log(response);
 			if (response.user) {
 				location.href = '/dashboard/';
 			}
@@ -28,7 +27,6 @@ function signInUser(username, password) {
 function watchLogIn() {
 	$('.log-in-form').submit(function(event) {
 		event.preventDefault();
-		console.log('here');
 		var username = $('#username').val();
 		var password = $('#password').val();
 		signInUser(username, password);
