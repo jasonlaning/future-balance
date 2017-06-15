@@ -185,10 +185,10 @@ function renderEditEntryForm (entryId) {
 		moment(entry.startDate).format('YYYY-MM-DD') + '" required>' +
 		'<label for="end-date">End Date</label>' +
 		'<input type="date" name="endDate" id="end-date" value="' + moment(entry.endDate).format('YYYY-MM-DD') + '" required>' +
-		'<button id="save">Save</button>' +
+		'<div class="button-wrap"><button id="save">Save</button>' +
 		'<button id="cancel">Cancel</button>' +
 		'<button id="delete">Delete</button>' +		
-		'<div class="message-box">' +
+		'<div class="message-box"></div>' +
 		'<span class="js-message"></span>' +
 		'</div></form></div></div>';
 
@@ -219,8 +219,8 @@ function renderNewEntryForm() {
 		'<input type="date" name="startDate" id="start-date" ' +
 		'value="' + today + '"><label for="end-date">End Date</label><input type="date" name="endDate" ' +
 		'id="end-date" value="2055-01-01">' +
-		'<button id="save">Save</button>' +
-		'<button id="cancel" value="cancel">Cancel</button><div class="message-box">' +
+		'<div class="button-wrap"><button id="save">Save</button>' +
+		'<button id="cancel" value="cancel">Cancel</button></div><div class="message-box">' +
 		'<span class="js-message"></span></div></form></div></div>';
 
 		$('.js-pop-window').html(formHtml);
@@ -239,8 +239,8 @@ function renderNewBalanceForm() {
 		'value="' + DASH_USER.mostRecentBalance.amount + '" required><label for="recent-balance-date">' +
 		'Date</label><input type="date" name="date" ' +
 		'id="date" value="' + today + '">' +
-		'<button id="save">Save</button>' +
-		'<button id="cancel" value="cancel">Cancel</button><div class="message-box">' +
+		'<div class="button-wrap"><button id="save">Save</button>' +
+		'<button id="cancel" value="cancel">Cancel</button></div><div class="message-box">' +
 		'<span class="js-message"></span></div></form></div></div>';
 
 		$('.js-pop-window').html(formHtml);
