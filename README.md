@@ -1,6 +1,10 @@
 # FutureBalance #
 
-Tracks repeating expenses and income and generates a calendar report that predicts daily account balances. Users can:
+Tracks repeating expenses and income and generates a calendar report that predicts daily account balances. 
+
+## Features ##
+
+Users can:
 
 - Try a demo account (unique instances of pre-populated sample entries)
 - Create unique user account with username and password; login/logout
@@ -13,6 +17,95 @@ Tracks repeating expenses and income and generates a calendar report that predic
 ## Screenshots ##
 
 ![](https://raw.githubusercontent.com/jasonlaning/future-balance/master/public/images/screenshots.jpg)
+
+## Users API ##
+
+root path: /users
+
+- '/login' 
+
+	- GET for user to log in
+		- required in req body:
+			- { username: String, password: String }
+
+- '/logout'
+
+	- GET for user to sign out
+		- destroys session, redirects to root
+
+- '/sign-up'
+
+	- POST to create new user account
+		- required in req body:
+			- { username: String, password: String }
+
+- '/me'
+
+	- GET to retrieve user data
+		- protected, requires login/session cookie
+		- returns:
+			- { 
+			- username: String,
+			- firstName: String,
+			- lastName: String,
+			- mostRecentBalance: {
+				- amount: Number,
+				- date: String
+				- }
+			- adjustmentEntries: Array of objects:
+				- { 
+				- id: String,
+				- name: String,
+				- type: String (Expense or Income),
+				- amount: Number,
+				- periodUnit: Number,
+				- periodType: String (week or month),
+				- startDate: Date,
+				- endDate: Date
+				- }
+
+				
+	- DELETE to delete user
+		- protected, requires login/session cookie
+		- redirects to root
+				
+- '/me/username'
+
+	- PUT to edit username
+		- protected, rquires login/session cookie
+		- required in req body: {username: String}
+
+- '/me/most-recent-balance'
+
+	- PUT to edit most recent balance
+		- protected, requires login/session cookie
+		- required in req body:
+			- {
+			- mostRecent Balance: {
+				- amount: Number,
+				- date: String
+				- }
+			- }
+		- returns updated user data (see '/me' GET for format)
+		
+
+- '/me/adjustment-entry
+
+	- POST for adding new entry
+		- protected, requires login/session cookie
+		- required fields in req body: name, type, amount, periodUnit, startDate, endDate
+		- returns updated user data and new entry (see '/me' GET for format)
+
+	- PUT for editing entry
+		- protected, requires login/session cookie
+		- required in req body: same fields at POST
+		- returns updated user data (see '/me' GET for format)
+	
+	- DELETE for deleting entry
+		- protected, requires login/session cookie
+		- required in req body: {id: String}
+		- returns updated user data (see '/me' GET for format)
+
 
 ## Tech ##
 
