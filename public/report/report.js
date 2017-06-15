@@ -276,7 +276,7 @@ function renderDetail(thisDateBox) {
 
 	var date = thisDateBox.attr('entry-date');
 	var detailHtml = '<div class="pop-window-background">' +
-		'<div class="pop-window "><div class="pop-exit">&#735;</div>' +
+		'<div class="pop-window small-pop"><div class="pop-exit">&#735;</div>' +
 		'<div class="detail-pop"><h2>Details for ' + moment(date).format('MMM Do, YYYY') + '</h2><ol>';
 
 	REPORT.adjustments[date].forEach(function(adj) {
