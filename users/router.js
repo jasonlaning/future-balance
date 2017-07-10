@@ -63,8 +63,9 @@ function loggedIn(req, res, next) {
 
 // GET for user to sign in
 router.get('/login',
-	passport.authenticate('basic', {session: true, failureRedirect: '/login.html'}),
+	passport.authenticate('basic', {failureRedirect: '/failure'}),
 		(req, res) => {
+			console.log("new res:", res);
 			res.json({user: req.user.apiRepr(), message: 'Sign in successful'});
 		}
 );

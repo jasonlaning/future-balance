@@ -34,4 +34,9 @@ function watchLogIn() {
 	})
 }
 
+$( document ).ajaxError(function() {
+	$( ".js-error-message" ).text( "Invalid username or password" );
+	$('.log-in-form')[0].reset();
+});
+
 $(watchLogIn());
